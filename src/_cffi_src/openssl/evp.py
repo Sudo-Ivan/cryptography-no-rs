@@ -11,6 +11,7 @@ INCLUDES = """
 TYPES = """
 typedef ... EVP_CIPHER;
 typedef ... EVP_MD;
+typedef ... EVP_MD_CTX;
 
 typedef ... EVP_PKEY;
 static const int EVP_PKEY_RSA;
@@ -26,6 +27,16 @@ FUNCTIONS = """
 const EVP_CIPHER *EVP_get_cipherbyname(const char *);
 
 const EVP_MD *EVP_get_digestbyname(const char *);
+int EVP_MD_size(const EVP_MD *);
+const char *EVP_MD_name(const EVP_MD *);
+
+EVP_MD_CTX *EVP_MD_CTX_new(void);
+void EVP_MD_CTX_free(EVP_MD_CTX *);
+int EVP_MD_CTX_copy_ex(EVP_MD_CTX *, const EVP_MD_CTX *);
+int EVP_DigestInit_ex(EVP_MD_CTX *, const EVP_MD *, void *);
+int EVP_DigestUpdate(EVP_MD_CTX *, const void *, size_t);
+int EVP_DigestFinal_ex(EVP_MD_CTX *, unsigned char *, unsigned int *);
+int EVP_DigestFinalXOF(EVP_MD_CTX *, unsigned char *, size_t);
 
 EVP_PKEY *EVP_PKEY_new(void);
 void EVP_PKEY_free(EVP_PKEY *);

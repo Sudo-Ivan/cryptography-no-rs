@@ -2,17 +2,14 @@
 # These requirements must be kept sync with the requirements in
 # ./.github/requirements/build-requirements.{in,txt}
 requires = [
-    "maturin>=1.9.4,<2",
-
     # Must be kept in sync with `project.dependencies`
     "cffi>=1.14; platform_python_implementation != 'PyPy' and python_version == '3.8'",
     "cffi>=2.0.0; platform_python_implementation != 'PyPy' and python_version >= '3.9'",
     # Used by cffi (which import distutils, and in Python 3.12, distutils has
-    # been removed from the stdlib, but installing setuptools puts it back) as
-    # well as our build.rs for the rust/cffi bridge.
+    # been removed from the stdlib, but installing setuptools puts it back)
     "setuptools!=74.0.0,!=74.1.0,!=74.1.1,!=74.1.2",
 ]
-build-backend = "maturin"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "cryptography"
@@ -98,40 +95,14 @@ pep8test = [
     "click >=8.0.1",
 ]
 
-[tool.maturin]
-python-source = "src"
-python-packages = ["cryptography"]
-manifest-path = "src/rust/Cargo.toml"
-module-name = "cryptography.hazmat.bindings._rust"
-locked = true
-sdist-generator = "git"
-include = [
-    "CHANGELOG.rst",
-    "CONTRIBUTING.rst",
+[tool.setuptools]
+package-dir = {"" = "src"}
 
-    "docs/**/*",
+[tool.setuptools.packages.find]
+where = ["src"]
 
-    { path = "src/_cffi_src/**/*.py", format = "sdist" },
-    { path = "src/_cffi_src/**/*.c", format = "sdist" },
-    { path = "src/_cffi_src/**/*.h", format = "sdist" },
-
-    { path = "Cargo.toml", format = "sdist" },
-    { path = "Cargo.lock", format = "sdist" },
-    { path = "src/rust/**/Cargo.toml", format = "sdist" },
-    { path = "src/rust/**/Cargo.lock", format = "sdist" },
-    { path = "src/rust/**/*.rs", format = "sdist" },
-
-    "tests/**/*.py",
-]
-exclude = [
-    "vectors/**/*",
-    "target/**/*",
-    "docs/_build/**/*",
-    ".github/**/*",
-    ".readthedocs.yml",
-    "ci-constraints-requirements.txt",
-    "mypy.ini",
-]
+[tool.setuptools.package-data]
+cryptography = ["py.typed"]
 
 [tool.pytest.ini_options]
 addopts = "-r s --capture=no --strict-markers --benchmark-disable"

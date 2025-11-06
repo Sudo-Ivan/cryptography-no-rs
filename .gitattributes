@@ -1,1 +1,7 @@
 *.pem text eol=lf
+
+# Exclude Rust files from upstream merges
+*.rs merge=ours
+Cargo.toml merge=ours
+Cargo.lock merge=ours
+src/rust/** merge=ours
